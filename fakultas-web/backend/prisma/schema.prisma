@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+// ===== ENUM =====
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}
+
+enum Level {
+  D3
+  D4
+  S1
+  S2
+  S3
+}
+
+enum PostCategory {
+  BERITA
+  PENGUMUMAN
+  AGENDA
+  PRESTASI
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// ===== USER ADMIN =====
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ===== FAKULTAS =====
+model Faculty {
+  id              Int            @id @default(autoincrement())
+  name            String
+  englishName     String?
+  slug            String         @unique
+  description     String         @db.Text
+  vision          String?        @db.Text
+  mission         Json?          // array teks misi
+  careerProspects Json?          // array prospek karir
+  heroImage       String?
+  email           String?
+  phone           String?
+  instagram       String?
+  youtube         String?
+  strengths       Json?
+  programs        StudyProgram[]
+  products        Product[]
+  posts           Post[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+// ===== PROGRAM STUDI =====
+model StudyProgram {
+  id              Int        @id @default(autoincrement())
+  name            String
+  slug            String     @unique
+  level           Level
+  accreditation   String?
+  profile         String     @db.Text
+  vision          String?    @db.Text
+  mission         Json?
+  totalSks        Int?
+  studyDuration   String?    // contoh: "8 Semester"
+  curriculumYear  String?
+  curriculumFile  String?    // path PDF kurikulum
+  courseGroups    Json?      // 4 kelompok mata kuliah unggulan
+  careerProspects Json?
+  facilities      Json?      // daftar fasilitas dan lab
+  heroImage       String?
+  email           String?
+  facultyId       Int
+  faculty         Faculty    @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  lecturers       Lecturer[]
+  posts           Post[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([facultyId])
+}
+
+// ===== DOSEN =====
+model Lecturer {
+  id             Int          @id @default(autoincrement())
+  name           String
+  nidn           String?      @unique
+  position       String       // jabatan fungsional
+  photo          String?
+  email          String?
+  bio            String?      @db.Text
+  studyProgramId Int
+  studyProgram   StudyProgram @relation(fields: [studyProgramId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([studyProgramId])
+}
+
+// ===== BERITA / PENGUMUMAN / AGENDA =====
+model Post {
+  id             Int           @id @default(autoincrement())
+  title          String
+  slug           String        @unique
+  content        String        @db.LongText
+  thumbnail      String?
+  category       PostCategory  @default(BERITA)
+  status         PostStatus    @default(DRAFT)
+  eventDate      DateTime?     // khusus agenda
+  publishedAt    DateTime?
+  authorId       Int
+  author         User          @relation(fields: [authorId], references: [id])
+  facultyId      Int?          // null = berita tingkat kampus
+  faculty        Faculty?      @relation(fields: [facultyId], references: [id], onDelete: SetNull)
+  studyProgramId Int?
+  studyProgram   StudyProgram? @relation(fields: [studyProgramId], references: [id], onDelete: SetNull)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([category, status])
+  @@index([facultyId])
+  @@index([studyProgramId])
+}
+
+// ===== GALERI =====
+model Gallery {
+  id        Int      @id @default(autoincrement())
+  title     String
+  imageUrl  String
+  createdAt DateTime @default(now())
+}
+
+// ===== PRODUK FAKULTAS =====
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String   @db.Text
+  image       String?
+  usedBy      String?  // contoh: "Digunakan oleh kampus"
+  link        String?
+  sortOrder   Int      @default(0)
+  facultyId   Int
+  faculty     Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([facultyId])
+}
