@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { FACULTY } from "@/lib/site";
 import { getData, img, tgl, type PostList } from "@/lib/public";
 
 export default async function NewsList({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const page = Math.max(1, Number((await searchParams).page) || 1);
-  const res = await getData<PostList>(`/posts?page=${page}&limit=9`);
+  const res = await getData<PostList>(`/posts?page=${page}&limit=9${FACULTY ? `&faculty=${FACULTY}` : ""}`);
   const posts = res?.data ?? [];
   const totalPages = res?.meta.totalPages ?? 1;
 

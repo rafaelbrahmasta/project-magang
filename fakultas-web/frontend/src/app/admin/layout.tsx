@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api, clearToken, getToken } from "@/lib/api";
+import { FACULTY } from "@/lib/site";
 
 const menu = [
     { href: "/admin/dashboard", label: "Dashboard" },
-    { href: "/admin/fakultas", label: "Fakultas" },
+    { href: "/admin/fakultas", label: FACULTY ? "Profil Fakultas" : "Fakultas" },
     { href: "/admin/prodi", label: "Program Studi" },
     { href: "/admin/dosen", label: "Dosen" },
     { href: "/admin/berita", label: "Berita" },

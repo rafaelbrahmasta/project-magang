@@ -44,6 +44,9 @@ export type CrudConfig = {
     sort?: (a: Row, b: Row, ctx: Ctx) => number;
     /** Mengembalikan nama kelompok; baris dengan kelompok sama diberi judul. undefined = tanpa kelompok. */
     groupBy?: (row: Row, ctx: Ctx) => string | undefined;
+    /** false = sembunyikan tombol Tambah / Hapus (bawaan: tampil). */
+    allowCreate?: boolean;
+    allowDelete?: boolean;
 };
 
 type Option = { value: string; label: string };
@@ -196,7 +199,13 @@ export default function CrudPage({ cfg }: { cfg: CrudConfig }) {
     function openNew() {
         setFormError("");
         setCurrent(null);
-        setValues(toForm(cfg.fields, null));
+        const init = toForm(cfg.fields, null);
+        // Pilihan yang hanya punya satu opsi (mis. satu-satunya fakultas) langsung dipilihkan
+        cfg.fields.forEach((f) => {
+            const opts = remote[f.name];
+            if (f.type === "select" && f.optionsFrom && !init[f.name] && opts?.length === 1) init[f.name] = opts[0].value;
+        });
+        setValues(init);
         setMode("new");
     }
 
@@ -348,12 +357,14 @@ export default function CrudPage({ cfg }: { cfg: CrudConfig }) {
         <div>
             <div className="mb-6 flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-[#0B3D91]">{cfg.title}</h1>
-                <button
-                    onClick={openNew}
-                    className="rounded-lg bg-[#1E6FD9] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0B3D91]"
-                >
-                    + Tambah {cfg.singular}
-                </button>
+                {cfg.allowCreate !== false && (
+                    <button
+                        onClick={openNew}
+                        className="rounded-lg bg-[#1E6FD9] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0B3D91]"
+                    >
+                        + Tambah {cfg.singular}
+                    </button>
+                )}
             </div>
 
             {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
@@ -442,9 +453,11 @@ export default function CrudPage({ cfg }: { cfg: CrudConfig }) {
                                         <button onClick={() => void openEdit(row)} className="mr-3 text-[#1E6FD9] hover:underline">
                                             Ubah
                                         </button>
-                                        <button onClick={() => void onDelete(row)} className="text-red-600 hover:underline">
-                                            Hapus
-                                        </button>
+                                        {cfg.allowDelete !== false && (
+                                            <button onClick={() => void onDelete(row)} className="text-red-600 hover:underline">
+                                                Hapus
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                                 </Fragment>

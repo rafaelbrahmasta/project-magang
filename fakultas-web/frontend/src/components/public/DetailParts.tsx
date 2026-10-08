@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { img, type CourseGroup, type Lecturer, type Product } from "@/lib/public";
+import Link from "next/link";
+import { img, tgl, type CourseGroup, type Lecturer, type Post, type Product } from "@/lib/public";
 
 export const LEVELS = ["D3", "D4", "S1", "S2", "S3"];
 export const card = "rounded-2xl border border-[#DCE6F5] bg-white p-6";
@@ -27,11 +28,14 @@ export function Sec({ id, tint, children }: { id?: string; tint?: boolean; child
   );
 }
 
-export function Head({ eye, title }: { eye: string; title: string }) {
+export function Head({ eye, title, href }: { eye: string; title: string; href?: string }) {
   return (
-    <div className="mb-8">
-      <p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#1559B8]">{eye}</p>
-      <h2 className="text-[34px] font-extrabold leading-tight text-[#0B2A5E]">{title}</h2>
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#1559B8]">{eye}</p>
+        <h2 className="text-[34px] font-extrabold leading-tight text-[#0B2A5E]">{title}</h2>
+      </div>
+      {href && <Link href={href} className="text-sm font-bold text-[#1559B8]">Lihat semua →</Link>}
     </div>
   );
 }
@@ -158,5 +162,35 @@ export function Kontak({ email, phone }: { email?: string | null; phone?: string
         </div>
       </div>
     </section>
+  );
+}
+
+const kat = (c: string) => c.charAt(0) + c.slice(1).toLowerCase();
+
+export function PostGrid({ items }: { items: Post[] }) {
+  return (
+    <div className="grid gap-5 md:grid-cols-3">
+      {items.map((p) => (
+        <Link key={p.id} href={`/berita/${p.slug}`} className={`${card} block transition hover:shadow-md`}>
+          <Foto src={p.thumbnail} label="Foto" />
+          <p className={`${tag} mt-4`}>{[kat(p.category), tgl(p.publishedAt)].filter(Boolean).join(" · ")}</p>
+          <h3 className="mt-1 text-lg font-bold text-[#0B2A5E]">{p.title}</h3>
+          <p className="mt-2 line-clamp-2 text-[15px] text-[#3A4D6E]">{p.excerpt}</p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+export function PostRows({ items }: { items: Post[] }) {
+  return (
+    <div className={`${card} divide-y divide-[#DCE6F5] py-2`}>
+      {items.map((p) => (
+        <Link key={p.id} href={`/berita/${p.slug}`} className="flex flex-col gap-2 py-5 sm:flex-row sm:gap-6">
+          <div className="min-w-32"><p className={tag}>{kat(p.category)}</p><p className="text-[13px] text-[#47608F]">{tgl(p.publishedAt)}</p></div>
+          <div><h3 className="text-lg font-bold text-[#0B2A5E]">{p.title}</h3><p className="mt-1 line-clamp-2 text-[15px] text-[#3A4D6E]">{p.excerpt}</p></div>
+        </Link>
+      ))}
+    </div>
   );
 }

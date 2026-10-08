@@ -1,11 +1,15 @@
 "use client";
 
 import CrudPage, { type CrudConfig } from "@/components/admin/CrudPage";
+import { FACULTY } from "@/lib/site";
 
 const cfg: CrudConfig = {
-    title: "Fakultas",
+    title: FACULTY ? "Profil Fakultas" : "Fakultas",
     singular: "Fakultas",
     basePath: "/faculties",
+    // Di website satu fakultas, profil fakultas hanya diubah (tidak ditambah/dihapus)
+    allowCreate: !FACULTY,
+    allowDelete: !FACULTY,
     columns: [
         { key: "name", label: "Nama" },
         { key: "slug", label: "Slug" },

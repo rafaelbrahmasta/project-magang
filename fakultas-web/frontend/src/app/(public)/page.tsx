@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { FACULTY } from "@/lib/site";
+import FacultySite from "@/components/public/FacultySite";
 import {
   getData, img, tgl, list, strengthsOf,
   type Faculty, type GalleryItem, type Lecturer, type Post, type PostList, type Product,
@@ -70,6 +72,7 @@ function PostCard({ p }: { p: Post }) {
 }
 
 export default async function Home() {
+  if (FACULTY) return <FacultySite slug={FACULTY} />; // mode website fakultas
   const [faculties, products, lecturers, galleries, prestasi, berita] = await Promise.all([
     getData<Faculty[]>("/faculties"),
     getData<Product[]>("/products"),

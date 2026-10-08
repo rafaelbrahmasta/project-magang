@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FACULTY } from "@/lib/site";
 import { getData, getDetail, groupsOf, img, list, type Faculty, type Product, type Program } from "@/lib/public";
 import { card, Checks, Dosen, Down, FokusBelajar, Head, Hero, Kontak, Produk, Sec, VisiMisi } from "@/components/public/DetailParts";
 
@@ -8,6 +9,7 @@ export default async function ProgramPage({ params }: { params: Promise<{ slug: 
   const { data: p, status } = await getDetail<Program>(`/programs/${slug}`);
   if (status === 404) notFound();
   if (!p) return <Down status={status} />;
+  if (FACULTY && p.faculty?.slug !== FACULTY) notFound(); // hanya prodi milik fakultas ini
 
   const [fac, products] = await Promise.all([
     p.faculty?.slug ? getData<Faculty>(`/faculties/${p.faculty.slug}`) : null,
@@ -29,7 +31,7 @@ export default async function ProgramPage({ params }: { params: Promise<{ slug: 
       <Hero
         kicker={`Program Studi / ${p.level}`}
         title={p.name}
-        sub={p.faculty && <Link href={`/fakultas/${p.faculty.slug}`} className="underline">{p.faculty.name}</Link>}
+        sub={p.faculty && <Link href={FACULTY ? "/" : `/fakultas/${p.faculty.slug}`} className="underline">{p.faculty.name}</Link>}
         image={p.heroImage}
       />
 
