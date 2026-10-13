@@ -15,6 +15,15 @@ export const programSchema = z.object({
     courseGroups: z
         .array(z.object({ title: z.string(), courses: z.array(z.string()) }))
         .optional(),
+    // BARU: roadmap studi per semester
+    roadmap: z
+        .array(
+            z.object({
+                semester: z.number().int().min(1).max(8),
+                courses: z.array(z.string()),
+            })
+        )
+        .optional(),
     careerProspects: z.array(z.string()).optional(),
     facilities: z
         .array(z.object({ name: z.string(), image: z.string().optional() }))
