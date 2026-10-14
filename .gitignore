@@ -1,2 +1,12 @@
 
 *.zip
+
+# deploy
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+dist/
+uploads/
+*.sql

@@ -9,6 +9,7 @@ export const facultySchema = z.object({
     mission: z.array(z.string()).optional(),
     careerProspects: z.array(z.string()).optional(),
     heroImage: z.string().optional(),
+    aboutImage: z.string().optional(),
     email: z.string().optional(),
     phone: z.string().optional(),
     instagram: z.string().optional(),

@@ -41,7 +41,6 @@ export default async function FacultySite({ slug }: { slug: string }) {
   return (
     <>
       <Hero kicker={`Fakultas / ${f.name.replace(/^Fakultas\s+/i, "")}`} title={f.name} sub={f.englishName} image={f.heroImage} />
-
       <Sec id="tentang" tint={tint()}>
         <div className={GAMBAR_TENTANG ? "grid items-center gap-10 md:grid-cols-2" : ""}>
           <Reveal>

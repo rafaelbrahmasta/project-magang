@@ -24,6 +24,12 @@ const cfg: CrudConfig = {
         { name: "mission", label: "Misi", type: "lines", help: "Satu misi per baris." },
         { name: "careerProspects", label: "Prospek Karir", type: "lines", help: "Satu prospek per baris." },
         { name: "heroImage", label: "Gambar Utama", type: "image" },
+        {
+            name: "aboutImage",
+            label: "Foto Sekilas Tentang",
+            type: "image",
+            help: "Tampil di samping teks Sekilas Tentang Fakultas. Disarankan rasio 4:3 (contoh 1200x900 px).",
+        },
         { name: "email", label: "Email", type: "text" },
         { name: "phone", label: "Telepon", type: "text" },
         { name: "instagram", label: "Instagram", type: "text" },

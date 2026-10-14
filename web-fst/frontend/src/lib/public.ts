@@ -5,7 +5,8 @@ export type Strength = { icon?: string; title: string; description: string };
 export type Faculty = {
   id: number; name: string; englishName?: string | null; slug: string; description: string;
   vision?: string | null; mission?: unknown; careerProspects?: unknown; strengths?: unknown;
-  heroImage?: string | null; email?: string | null; phone?: string | null; programs?: Prog[];
+  heroImage?: string | null; aboutImage?: string | null; // BARU: aboutImage (foto Sekilas Tentang)
+  email?: string | null; phone?: string | null; programs?: Prog[];
 };
 export type Lecturer = {
   id: number; name: string; position: string; photo?: string | null; email?: string | null;

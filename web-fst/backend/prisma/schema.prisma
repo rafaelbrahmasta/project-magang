@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -61,6 +59,7 @@ model Faculty {
   mission         Json?          // array teks misi
   careerProspects Json?          // array prospek karir
   heroImage       String?
+  aboutImage      String?        // foto di samping "Sekilas Tentang"
   email           String?
   phone           String?
   instagram       String?
