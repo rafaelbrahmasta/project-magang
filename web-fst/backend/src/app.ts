@@ -19,7 +19,7 @@ import uploadRoutes from "./routes/upload.routes.js";
 const app = express();
 
 // Saat dipasang di belakang Nginx atau proxy, aktifkan baris ini:
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 
 // FRONTEND_URL boleh lebih dari satu, dipisah koma
 const allowedOrigins = (process.env.FRONTEND_URL ?? "http://localhost:3000")
