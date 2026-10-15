@@ -1,5 +1,4 @@
 /**
- * Slug fakultas untuk website ini. Kosong = website universitas (semua fakultas).
- * Diisi lewat NEXT_PUBLIC_FACULTY_SLUG (terbaca juga oleh dashboard admin), atau FACULTY_SLUG.
+ * Slug fakultas untuk website ini. Di-hardcode langsung ke "feb".
  */
-export const FACULTY = (process.env.NEXT_PUBLIC_FACULTY_SLUG || process.env.FACULTY_SLUG || "").trim();
+export const FACULTY = "feb";
