@@ -15,7 +15,7 @@ export type Program = Prog & {
   accreditation?: string | null; profile: string; vision?: string | null; mission?: unknown;
   totalSks?: number | null; studyDuration?: string | null; curriculumYear?: string | null;
   curriculumFile?: string | null; careerProspects?: unknown; heroImage?: string | null;
-  email?: string | null; courseGroups?: unknown; roadmap?: unknown; // BARU: roadmap
+  email?: string | null; courseGroups?: unknown; roadmap?: unknown;
   faculty?: { name: string; slug: string }; lecturers?: Lecturer[];
 };
 export type Post = {
@@ -32,12 +32,18 @@ export type GalleryItem = { id: number; title: string; imageUrl: string };
 /** Ambil data dari backend. Mengembalikan null kalau gagal / tidak ditemukan. */
 export async function getData<T>(path: string): Promise<T | null> {
   try {
-    const r = await fetch(`${API}/api${path}`, { cache: "no-store" });
+    const r = await fetch(`${API}/api${path}`, {
+      cache: "no-store",
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
     return r.ok ? ((await r.json()) as T) : null;
   } catch {
     return null;
   }
 }
+
 /** Ubah path upload (/uploads/...) menjadi URL lengkap. */
 export const img = (p?: string | null) => (!p ? null : p.startsWith("http") ? p : `${API}${p}`);
 export const tgl = (d?: string | null) => (d ? new Date(d).toLocaleDateString("id-ID", { dateStyle: "long" }) : "");
@@ -75,7 +81,12 @@ export const roadmapOf = (x: unknown): SemesterPlan[] =>
 /** Seperti getData, tapi membawa kode status agar 404 asli bisa dibedakan dari error server. */
 export async function getDetail<T>(path: string): Promise<{ data: T | null; status: number }> {
   try {
-    const r = await fetch(`${API}/api${path}`, { cache: "no-store" });
+    const r = await fetch(`${API}/api${path}`, {
+      cache: "no-store",
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
     return { data: r.ok ? ((await r.json()) as T) : null, status: r.status };
   } catch {
     return { data: null, status: 0 };
