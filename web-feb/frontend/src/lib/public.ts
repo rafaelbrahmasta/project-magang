@@ -1,4 +1,4 @@
-export const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+export const API = "https://leggings-bucket-retouch.ngrok-free.dev";
 
 export type Prog = { id: number; name: string; slug: string; level: string };
 export type Strength = { icon?: string; title: string; description: string };
