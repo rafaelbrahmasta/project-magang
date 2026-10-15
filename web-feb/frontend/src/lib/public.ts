@@ -1,4 +1,5 @@
-export const FACULTY = "feb";
+export const API = "https://leggings-bucket-retouch.ngrok-free.dev";
+
 export type Prog = { id: number; name: string; slug: string; level: string };
 export type Strength = { icon?: string; title: string; description: string };
 export type Faculty = {
@@ -44,31 +45,38 @@ export async function getData<T>(path: string): Promise<T | null> {
 }
 
 /** Ubah path upload (/uploads/...) menjadi URL lengkap. */
-export const img = (p?: string | null) => (!p ? null : p.startsWith("http") ? p : `${API}${p}`);
-export const tgl = (d?: string | null) => (d ? new Date(d).toLocaleDateString("id-ID", { dateStyle: "long" }) : "");
+export const img = (p?: string | null): string | null => (!p ? null : p.startsWith("http") ? p : `${API}${p}`);
+export const tgl = (d?: string | null): string => (d ? new Date(d).toLocaleDateString("id-ID", { dateStyle: "long" }) : "");
+
 /** Pastikan field JSON (misi, prospek karir) berupa array teks. */
-export const list = (x: unknown): string[] => (Array.isArray(x) ? x.filter((i) => typeof i === "string") : []);
+export const list = (x: unknown): string[] => (Array.isArray(x) ? x.filter((i): i is string => typeof i === "string") : []);
+
 /** Pastikan field keunggulan berupa array {title, description}. */
 export const strengthsOf = (x: unknown): Strength[] =>
-  Array.isArray(x) ? x.filter((i) => i && typeof i.title === "string" && typeof i.description === "string") : [];
+  Array.isArray(x)
+    ? x.filter((i): i is Strength => i !== null && typeof i === "object" && typeof (i as Strength).title === "string" && typeof (i as Strength).description === "string")
+    : [];
 
 export type CourseGroup = { title: string; courses: string[] };
+
 /** Pastikan field kelompok mata kuliah berupa array {title, courses[]}. */
 export const groupsOf = (x: unknown): CourseGroup[] =>
   Array.isArray(x)
-    ? x.filter((g) => g && typeof g.title === "string").map((g) => ({
-        title: g.title as string,
-        courses: Array.isArray(g.courses) ? (g.courses as unknown[]).filter((c): c is string => typeof c === "string") : [],
-      }))
+    ? x
+        .filter((g): g is { title: unknown; courses: unknown } => g !== null && typeof g === "object" && typeof (g as { title: unknown }).title === "string")
+        .map((g) => ({
+          title: g.title as string,
+          courses: Array.isArray(g.courses) ? (g.courses as unknown[]).filter((c): c is string => typeof c === "string") : [],
+        }))
     : [];
 
-// BARU: roadmap studi per semester
 export type SemesterPlan = { semester: number; courses: string[] };
+
 /** Pastikan field roadmap berupa array {semester, courses[]}, urut semester, semester kosong dibuang. */
 export const roadmapOf = (x: unknown): SemesterPlan[] =>
   Array.isArray(x)
     ? x
-        .filter((s) => s && typeof s.semester === "number")
+        .filter((s): s is { semester: unknown; courses: unknown } => s !== null && typeof s === "object" && typeof (s as { semester: unknown }).semester === "number")
         .map((s) => ({
           semester: s.semester as number,
           courses: Array.isArray(s.courses) ? (s.courses as unknown[]).filter((c): c is string => typeof c === "string") : [],
