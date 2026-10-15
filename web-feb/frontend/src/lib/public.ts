@@ -1,5 +1,4 @@
-export const API = "https://leggings-bucket-retouch.ngrok-free.dev";
-
+export const FACULTY = "feb";
 export type Prog = { id: number; name: string; slug: string; level: string };
 export type Strength = { icon?: string; title: string; description: string };
 export type Faculty = {
