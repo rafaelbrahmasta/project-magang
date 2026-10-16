@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
 export default function RootPage() {
-  redirect("/fakultas-ekonomi-bisnis");
+  // Arahkan ke slug fakultas yang benar, misal /feb atau /home
+  redirect("/feb");
 }
